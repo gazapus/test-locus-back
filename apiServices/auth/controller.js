@@ -49,6 +49,31 @@ exports.sign_up = async function (req, res, next) {
     }
 }
 
+exports.sign_up_admin = async function (req, res, next) {
+    const SALT_ROUNDS = 10;
+    try {
+        const hashPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
+        let user = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: hashPassword,
+            role: "ADMIN",
+            confirmed: true
+        })
+        user.save()
+            .then(data => {
+                return res.status(200).send(data);
+            })
+            .catch(err => {
+                return res.status(500).send({
+                    message: err.message || 'Some error occurred while creating this data'
+                })
+            })
+    } catch (err) {
+        return res.status(500).send({ message: err.message || 'Server Error' });
+    }
+}
+
 exports.confirm = async function (req, res) {
     User.updateOne(
         { _id: req.params.id },
