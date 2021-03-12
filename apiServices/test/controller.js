@@ -1,4 +1,5 @@
 var Test = require('./model');
+var User = require('../user/model');
 
 exports.get_all = function (req, res) {
     Test.find({})
@@ -28,15 +29,20 @@ exports.get_one = function (req, res) {
 
 exports.create = async function (req, res) {
     try {
+        let user = await User.findOne({username: req.params.username});
+        if(!user) return res.status(404).send({message: "No se encontro usuario con el username dado"});
         let test = new Test({
-            alias: user.req.body.alias,
-            age: user.age,
-            sex: user.sex,
+            owner: user.id,
+            alias: req.body.alias,
+            age: req.body.age,
+            sex: req.body.sex,
             institution: req.body.institution,
             grade: req.body.grade,
             results: req.body.results,
         })
         let testSaved = await test.save();
+        user.tests.push(testSaved.id);
+        await user.save();
         return res.status(200).send(testSaved);
     } catch (err) {
         console.log(err)
@@ -44,25 +50,16 @@ exports.create = async function (req, res) {
     }
 }
 
-exports.delete_one = (req, res) => {
+exports.delete_one = async (req, res) => {
     const id = req.params.id;
-    Test.findByIdAndRemove(id)
-        .then(data => {
-            if (data) {
-                res.send({
-                    message: "result was deleted successfully!"
-                });
-            } else {
-                res.status(404).send({
-                    message: `Cannot delete result with id=${id}. Probably result was not found!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete result with id=" + id
-            });
-        });
+    try {
+        let test = await Test.findById(id);
+        if(!test) return res.status(404).send({message: `Cannot found result with id=${id}`});
+        await test.deleteOne();
+        return res.send({message: "result was deleted successfully!"});;
+    }catch(err) {
+        res.status(500).send({ message: "Could not delete result with id=" + id });
+    };
 };
 
 exports.delete_all = (req, res) => {

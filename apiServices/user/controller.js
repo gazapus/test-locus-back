@@ -66,7 +66,7 @@ exports.update_username = async function (req, res) {
     try {
         const id = req.body.userId;
         let user = await User.findOne({ username: req.body.username });
-        if (user && user.id !== ud) return res.status(400).send({ message: "The username is used" })
+        if (user && user.id !== id) return res.status(400).send({ message: "The username is used" })
         let userUpdated = await User.findByIdAndUpdate(id, { username: req.body.username });
         if (userUpdated) return res.send(userUpdated);
         return res.status(404).send({ message: "Not found result with id " + id });
