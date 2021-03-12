@@ -7,7 +7,7 @@ const mailerConfig = config.get('Customer.transporter');
 function confirmationSignUp(id) {
     return `
         <h3>Confirmá tu correo electrónico</h3>
-        <p>Para accedera tu cuenta y trabajar con el test de Caras-R confirmé su registro.</p>
+        <p>Para accedera tu cuenta y trabajar con el test de Locus de Control confirmé su registro.</p>
         <br/>
         <a href="${hostFront + 'confirmation/' + id}">CONFIRMAR</a>
     `
@@ -17,7 +17,7 @@ function confirmationOriginalEmailChange(id, newEmail) {
     return `
         <h3>Cambios en tu cuenta</h3>
         <p>
-            Se ha seleccionado a ${newEmail} como nueva dirección para su cuenta en CARAS-R.
+            Se ha seleccionado a ${newEmail} como nueva dirección para su cuenta en Locus de Control
             <br/>
             Si ha sido usted no hace falta realizar otra acción. De lo contrario siga el siguiente enlace para cancelar este cambio.
             También es necesario que cambie su contraseña para mayor seguridad.
@@ -29,9 +29,9 @@ function confirmationOriginalEmailChange(id, newEmail) {
 
 function confirmationNewEmailChange(id, newEmail) {
     return `
-        <h3>Se ha vinculado esta dirección a una cuenta en CARAS-R</h3>
+        <h3>Se ha vinculado esta dirección a una cuenta en Locus de Control</h3>
         <p>
-            Se ha seleccionado esta cuenta - ${newEmail} - como nueva dirección para una cuenta en CARAS-R.
+            Se ha seleccionado esta cuenta - ${newEmail} - como nueva dirección para una cuenta en Locus de Control.
             <br/>
             Para confirmar y hacer efectivo este cambio siga el siguiente link.
         </p>
@@ -42,7 +42,7 @@ function confirmationNewEmailChange(id, newEmail) {
 
 let sendConfirmation = function (req, res) {
     let mailOptions = {
-        from: `"Caras-R" <${mailerConfig.remitent}>`,
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
         to: req.body.email,
         subject: 'Conformación de registro',
         html: confirmationSignUp(req.body.id)
@@ -59,7 +59,7 @@ let sendConfirmation = function (req, res) {
 
 let sendEmailChangeToOriginal = function (req, res, next) {
     let mailOptions = {
-        from: `"Caras-R" <${mailerConfig.remitent}>`,
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
         to: req.body.originalEmail,
         subject: 'Cambio de dirección de correo electronico',
         html: confirmationOriginalEmailChange(req.body.request_id, req.body.newEmail)
@@ -76,9 +76,9 @@ let sendEmailChangeToOriginal = function (req, res, next) {
 
 let sendEmailChangeToNew = function (req, res) {
     let mailOptions = {
-        from: `"Caras-R" <${mailerConfig.remitent}>`,
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
         to: req.body.newEmail,
-        subject: 'Se ha vinculado esta dirección en CARAS-R',
+        subject: 'Se ha vinculado esta dirección en Locus de Control',
         html: confirmationNewEmailChange(req.body.request_id, req.body.newEmail)
     };
     mailer.transporter.sendMail(mailOptions)
