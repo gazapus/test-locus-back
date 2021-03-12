@@ -1,0 +1,16 @@
+{
+    "Customer": {
+        "server": {
+            "host": "http://localhost:8080"
+        },
+        "dbConfig": {
+            "host": "mongodb://localhost:27017",
+            "port": 8080,
+            "dbName": "test-locus"
+        },
+        "transporter": {
+            "host": "in-v3.mailjet.com",
+            "port": 587
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "Customer": {
+        "dbConfig": {
+            "host": "mongodb://localhost:27017",
+            "dbName": "test-locus"
+        },
+        "transporter": {
+            "user": "ef35f57202f75adb585adb3b95a0725b",
+            "password": "299cbe5f1af4a21a553abb01a283575e",
+            "remitent": "cristianv129@hotmail.com"
+        },
+        "front": {
+            "host": "http://localhost:3000/"
+        },
+        "secret": {
+            "key": "gazapus-secret-key"
+        }
+    }
+}

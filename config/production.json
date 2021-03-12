@@ -1,0 +1,10 @@
+{
+    "Customer": {
+        "server": {
+            "host": "https://caras-r-backend.herokuapp.com/"
+        },
+        "front": {
+            "host": "https://caras-r-front.herokuapp.com/#/"
+        }
+    }
+}
