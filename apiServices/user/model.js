@@ -7,7 +7,11 @@ let schema = new Schema({
     password: String,
     tests: [{type: Schema.ObjectId, ref: 'Test'}],
     confirmed: { type: Boolean, default: false },
-    deleted: { type: Boolean, default: false }
+    deleted: { type: Boolean, default: false },
+    role: {
+        type: String,
+        default: "USER"
+    }
 },
     { timestamps: true }
 );

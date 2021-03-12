@@ -34,10 +34,22 @@ let verifyToken = (req, res, next) => {
     });
 };
 
+let verifyAdmin = (req, res, next) => {
+    User.findById(req.body.userId)
+        .then(user => {
+            if(user.role !== "ADMIN") return res.status(401).send({ message: "No tiene permiso de administrador" });
+            next();
+        })
+        .catch(err => {
+            return res.status(500).send({ message: err.message || "Se produjo un error en el servidor" });
+        })
+    }
+
 const authValidation = {
     checkDuplicatedEmail,
     checkDuplicatedUsername,
-    verifyToken
+    verifyToken,
+    verifyAdmin
 };
 
 module.exports = authValidation
