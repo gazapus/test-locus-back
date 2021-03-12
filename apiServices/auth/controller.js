@@ -13,7 +13,7 @@ exports.sign_in = async function (req, res) {
         if (isPasswordValid) {
             var token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: A_DAY_IN_MS });
             res.status(200).send({
-                alias: user.alias,
+                username: user.username,
                 email: user.email,
                 accessToken: token
             });
@@ -30,7 +30,7 @@ exports.sign_up = async function (req, res, next) {
     try {
         const hashPassword = await bcrypt.hash(req.body.password, SALT_ROUNDS);
         let user = new User({
-            alias: req.body.alias,
+            username: req.body.username,
             email: req.body.email,
             password: hashPassword,
         })

@@ -13,6 +13,17 @@ let checkDuplicatedEmail = (req, res, next) => {
         })
 };
 
+let checkDuplicatedUsername = (req, res, next) => {
+    User.findOne({ username: req.body.username })
+        .exec((err, user) => {
+            if (err) return res.status(500).send({ message: err });
+            if (user) {
+                return res.status(400).send({ message: "Failed! Username is already in use!" });
+            }
+            next();
+        })
+};
+
 let verifyToken = (req, res, next) => {
     let token = req.headers["x-access-token"];
     if (!token) return res.status(403).send({ message: "No authentification token provided!" });
@@ -25,6 +36,7 @@ let verifyToken = (req, res, next) => {
 
 const authValidation = {
     checkDuplicatedEmail,
+    checkDuplicatedUsername,
     verifyToken
 };
 
