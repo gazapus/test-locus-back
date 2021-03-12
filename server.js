@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const dbConfig = config.get('Customer.dbConfig');
 const PORT = process.env.PORT || dbConfig.port;
 
+mongoose.set('useFindAndModify', false);
+
 mongoose
     .connect(`${dbConfig.host}/${dbConfig.dbName}`, {
         useNewUrlParser: true,
