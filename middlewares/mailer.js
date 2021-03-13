@@ -40,6 +40,19 @@ function confirmationNewEmailChange(id, newEmail) {
     `
 }
 
+function confirmationSuccessfull(username, email) {
+    return `
+        <h3>Se ha confirmado su cuenta en la web del Test Locus de Control</h3>
+        <ul>
+            <li>Su email: ${email}</li>
+            <li>Su usuario: ${username}</li>
+        </ul>
+        <p>Ahora ya puede iniciar sesión con su correo electrónico y contraseña</p>
+        <br/>
+        <a href="${hostFront + 'login'}">INICIAR SESIÓN</a>
+    `
+}
+
 let sendConfirmation = function (req, res) {
     let mailOptions = {
         from: `"Locus de Control" <${mailerConfig.remitent}>`,
@@ -90,10 +103,27 @@ let sendEmailChangeToNew = function (req, res) {
         })
 }
 
+let sendEmailConfirmated = function (req, res) {
+    let mailOptions = {
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
+        to:  res.locals.email,
+        subject: 'Confirmación de cuenta exitosa',
+        html: confirmationSuccessfull(res.locals.username, res.locals.email)
+    };
+    mailer.transporter.sendMail(mailOptions)
+        .then(response => {
+            return res.status(200).send({ message: 'Se ha enviado un mail de aviso de confirmación' });
+        })
+        .catch(err => {
+            return res.status(500).send({ message: err.message || 'Se ha producido un error al enviar el email de confirmación' });
+        })
+}
+
 const mailerFunctions = {
     sendConfirmation,
     sendEmailChangeToOriginal,
-    sendEmailChangeToNew
+    sendEmailChangeToNew,
+    sendEmailConfirmated
 };
 
 module.exports = mailerFunctions

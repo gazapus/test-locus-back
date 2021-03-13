@@ -74,16 +74,19 @@ exports.sign_up_admin = async function (req, res, next) {
     }
 }
 
-exports.confirm = async function (req, res) {
-    User.updateOne(
-        { _id: req.params.id },
-        { confirmed: true },
-        (err, response) => {
-            if (err) return res.status(500).send({ message: 'Some error occurred while updating this data' });
-            if (response.n === 0) return res.status(404).send({ message: 'User not found' });
-            return res.status(200).send(response)
-        }
-    )
+exports.confirm = async function (req, res, next) {
+    const id = req.params.id;
+    try {
+        let user = await User.findById(id);
+        if(!user) return res.status(404).send({message: `No se encontró usuario con la id ${id}`});
+        user.confirmed = true;
+        await user.save();
+        res.locals.username = user.username;
+        res.locals.email = user.email;
+        next();
+    } catch(err) {
+        return res.status(500).send({ message: err.message || 'Some error occurred while updating this data' });
+    }
 }
 
 exports.is_logged = function (req, res) {
