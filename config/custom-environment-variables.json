@@ -9,6 +9,9 @@
             "user": "TRANSPORTER_USER",
             "password": "TRANSPORTER_PASSWORD",
             "remitent": "TRANSPORTER_REMITENT"
+        },
+        "secret": {
+            "key": "SECRET_JWT_SIGN"
         }
     }
 }
