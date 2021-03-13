@@ -1,7 +1,6 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 const functions = require('./utils/functions');
-const User = require('../user/model');
 
 let schema = new Schema({
     owner: { type: mongoose.Types.ObjectId, ref: 'User' },
@@ -39,12 +38,14 @@ schema.post("save", async function (doc, next) {
 
 schema.pre("deleteOne", { document: true, query: false }, async function (next) {
     try {
+        const User = require('../user/model');
         let user = await User.findById(this.owner);
         let index = user.tests.findIndex(e => e === this._id);
         user.tests.splice(index, 1);
         await user.save();
     } catch (err) {
-        let error = new Error(err.message || 'Error al guardar');
+        console.log(err)
+        let error = new Error({message: err.message || 'Error al guardar'});
         next(error)
     }
 })

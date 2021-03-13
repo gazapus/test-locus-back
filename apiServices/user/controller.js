@@ -74,26 +74,16 @@ exports.update_username = async function (req, res) {
         return res.status(500).send({ message: err.message || "Error retrieving result with id=" + id });
     }
 };
-
-exports.delete_one = (req, res) => {
+exports.delete_one = async (req, res) => {
     const id = req.params.id;
-    User.findByIdAndRemove(id)
-        .then(data => {
-            if (data) {
-                res.send({
-                    message: "result was deleted successfully!"
-                });
-            } else {
-                res.status(404).send({
-                    message: `Cannot delete result with id=${id}. Probably result was not found!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete result with id=" + id
-            });
-        });
+    try {
+        let user = await User.findById(id);
+        if(!user) return res.status(404).send({message: `Cannot found result with id=${id}`});
+        await user.deleteOne();
+        return res.send({message: "result was deleted successfully!"});;
+    }catch(err) {
+        res.status(500).send({ message: "Could not delete result with id=" + id });
+    };
 };
 
 exports.delete_all = (req, res) => {

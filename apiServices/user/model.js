@@ -22,4 +22,15 @@ schema.method("toJSON", function () {
     return object;
 });
 
+schema.pre("deleteOne", { document: true, query: false }, async function (next) {
+    try {
+        const Test = require('../test/model');
+        await Test.deleteMany({owner: this._id})
+        next();
+    } catch (err) {
+        let error = new Error(err.message || 'Error al guardar');
+        next(error)
+    }
+})
+
 module.exports = mongoose.model('User', schema)
