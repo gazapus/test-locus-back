@@ -4,6 +4,7 @@ var jwt = require("jsonwebtoken");
 const SECRET_KEY = require('config').get('Customer.secret').key;
 
 exports.sign_in = async function (req, res) {
+    console.log(req.body.email)
     const A_DAY_IN_MS = 86400;
     try {
         const user = await User.findOne({ email: req.body.email });
