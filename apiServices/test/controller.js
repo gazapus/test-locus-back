@@ -27,6 +27,15 @@ exports.get_one = function (req, res) {
         });
 };
 
+exports.get_by_user = async function(req, res) {
+    User.findOne({ _id: req.body.userId}).populate('tests').exec(
+        function(err, user) {
+            if(err) return res.status(400).send({message: err.message || 'Falló la busqueda de usuario'});
+            return res.status(200).send(user.tests);
+        }
+    );
+}
+
 exports.create = async function (req, res) {
     try {
         let user = await User.findOne({username: req.params.username});
