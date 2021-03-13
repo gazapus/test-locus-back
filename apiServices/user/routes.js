@@ -6,6 +6,7 @@ const authValidation = require('../../middlewares/authValidation');
 
 router.get('/get/all', [authValidation.verifyToken, authValidation.verifyAdmin, controller.get_all]);
 router.get('/get/one/:id', [authValidation.verifyToken, authValidation.verifyAdmin, controller.get_one]);
+router.get('/check/username/:username', controller.check_username);
 router.put('/update/one/mail', [authValidation.verifyToken, controller.update_email ]);
 router.put('/update/one/username', [authValidation.verifyToken, controller.update_username]);
 //router.post('/create', [authValidation.checkDuplicatedEmail, authValidation.checkDuplicatedUsername, controller.create]);

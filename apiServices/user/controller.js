@@ -26,6 +26,16 @@ exports.get_one = function (req, res) {
         });
 };
 
+exports.check_username = function (req, res) {
+    const username = req.params.username;
+    User.findOne({username: username})
+        .then(data => {
+            if (data) return res.status(200).send();
+            else return res.status(404).send({message: 'Usuario no encontrado'});
+        })
+        .catch(err => res.status(500).send({ message: err.message || "Error retrieving result with id=" + id }))
+};
+
 exports.create = function (req, res) {
     const role = (req.body.role === "" || req.body.role === null) ? "USER" : "ADMIN";
     let user = new User({
