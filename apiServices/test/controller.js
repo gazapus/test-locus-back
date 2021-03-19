@@ -64,6 +64,7 @@ exports.delete_one = async (req, res) => {
     try {
         let test = await Test.findById(id);
         if(!test) return res.status(404).send({message: `Cannot found result with id=${id}`});
+        if(test.owner != req.body.userId) return res.status(503).send({message: `Usuario no autorizado`});
         await test.deleteOne();
         return res.send({message: "result was deleted successfully!"});;
     }catch(err) {
