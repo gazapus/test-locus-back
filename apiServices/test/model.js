@@ -40,7 +40,7 @@ schema.pre("deleteOne", { document: true, query: false }, async function (next) 
     try {
         const User = require('../user/model');
         let user = await User.findById(this.owner);
-        let index = user.tests.findIndex(e => e === this._id);
+        let index = user.tests.findIndex(e => String(e) === String(this._id));
         user.tests.splice(index, 1);
         await user.save();
     } catch (err) {
