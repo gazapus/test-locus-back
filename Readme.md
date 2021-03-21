@@ -1,3 +1,3 @@
 # TO DO:
-- Agregar middeware al salvar el test
-- Agregar SECRET a production env
+- Agregar url al email de confirmacion final
+- cONFIRMAR CAMBIO DE EMAIL

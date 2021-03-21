@@ -1,4 +1,5 @@
 var User = require('./model');
+const bcrypt = require('bcryptjs');
 
 exports.get_all = function (req, res) {
     User.find({})
@@ -84,6 +85,19 @@ exports.update_username = async function (req, res) {
         return res.status(500).send({ message: err.message || "Error retrieving result with id=" + id });
     }
 };
+
+exports.update_password = async function (req, res) {
+    try {
+        const id = req.body.userId;
+        const hashPassword = await bcrypt.hash(req.body.password, 10);
+        let userUpdated = await User.findByIdAndUpdate(id, { password: hashPassword});
+        if (userUpdated) return res.send(userUpdated);
+        return res.status(404).send({ message: "Not found result with id " + id });
+    } catch (err) {
+        return res.status(500).send({ message: err.message || "Error retrieving result with id=" + id });
+    }
+};
+
 exports.delete_one = async (req, res) => {
     const id = req.params.id;
     try {

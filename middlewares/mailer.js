@@ -1,7 +1,6 @@
 const config = require('config');
 const mailer = require('../utils/mailer');
 const hostFront = config.get('Customer.front.host');
-
 const mailerConfig = config.get('Customer.transporter');
 
 function confirmationSignUp(id) {
@@ -46,6 +45,7 @@ function confirmationSuccessfull(username, email) {
         <ul>
             <li>Su email: ${email}</li>
             <li>Su usuario: ${username}</li>
+            <li>Su enlace del test: ${hostFront}/test/start/${username}</li>
         </ul>
         <p>Ahora ya puede iniciar sesión con su correo electrónico y contraseña</p>
         <br/>
