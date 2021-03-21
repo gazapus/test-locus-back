@@ -4,14 +4,15 @@ var jwt = require("jsonwebtoken");
 const SECRET_KEY = require('config').get('Customer.secret').key;
 
 exports.sign_in = async function (req, res) {
-    const A_DAY_IN_MS = 86400;
+    //const A_DAY_IN_MS = 86400;
+    //, { expiresIn: A_DAY_IN_MS }
     try {
         const user = await User.findOne({ email: req.body.email });
         if (!user) return res.status(404).send({ message: "User not found" });
         if (!user.confirmed) return res.status(400).send({ message: "User must confirm email to finish register" });
         const isPasswordValid = bcrypt.compareSync(req.body.password, user.password);
         if (isPasswordValid) {
-            var token = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: A_DAY_IN_MS });
+            var token = jwt.sign({ id: user.id }, SECRET_KEY);
             res.status(200).send({
                 username: user.username,
                 email: user.email,
