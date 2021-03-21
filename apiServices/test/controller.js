@@ -1,5 +1,6 @@
 var Test = require('./model');
 var User = require('../user/model');
+const functions = require('./utils/functions');
 
 exports.get_all = function (req, res) {
     Test.find({})
@@ -34,6 +35,15 @@ exports.get_by_user = async function(req, res) {
             return res.status(200).send(user.tests);
         }
     );
+}
+
+exports.calculate_results = async function(req, res) {
+    let result = {
+        locus: functions.calculateLocus(req.body.answers),
+        internal: functions.calculateInternalResults(req.body.answers),
+        external: functions.calculateExternalResults(req.body.answers)
+    }
+    return res.status(200).send(result);
 }
 
 exports.create = async function (req, res) {
