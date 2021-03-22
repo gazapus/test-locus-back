@@ -73,13 +73,13 @@ let sendConfirmation = function (req, res) {
 let sendEmailChangeToOriginal = function (req, res, next) {
     let mailOptions = {
         from: `"Locus de Control" <${mailerConfig.remitent}>`,
-        to: req.body.originalEmail,
+        to: res.locals.originalEmail,
         subject: 'Cambio de dirección de correo electronico',
-        html: confirmationOriginalEmailChange(req.body.request_id, req.body.newEmail)
+        html: confirmationOriginalEmailChange(res.locals.request_id, req.body.email)
     };
     mailer.transporter.sendMail(mailOptions)
         .then(response => {
-            console.log('Se ha enviado un mail de aviso sobre este cambio a su correo original');
+            console.log('Se ha enviado un mail de aviso sobre este cambio al correo original');
             next();
         })
         .catch(err => {
@@ -90,9 +90,9 @@ let sendEmailChangeToOriginal = function (req, res, next) {
 let sendEmailChangeToNew = function (req, res) {
     let mailOptions = {
         from: `"Locus de Control" <${mailerConfig.remitent}>`,
-        to: req.body.newEmail,
+        to: req.body.email,
         subject: 'Se ha vinculado esta dirección en Locus de Control',
-        html: confirmationNewEmailChange(req.body.request_id, req.body.newEmail)
+        html: confirmationNewEmailChange(res.locals.request_id, req.body.email)
     };
     mailer.transporter.sendMail(mailOptions)
         .then(response => {
