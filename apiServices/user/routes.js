@@ -12,7 +12,7 @@ router.put('/update/one/mail', [authValidation.verifyToken, controller.update_em
 router.put('/update/one/username', [authValidation.verifyToken, controller.update_username]);
 router.put('/update/one/password', [authValidation.verifyToken, controller.update_password]);
 //router.post('/create', [authValidation.checkDuplicatedEmail, authValidation.checkDuplicatedUsername, controller.create]);
-router.delete('/delete', [authValidation.verifyToken, authValidation.verifyAdmin, controller.delete_all]);
-router.delete('/delete/:id', [authValidation.verifyToken, authValidation.verifyAdmin, controller.delete_one]);
+router.delete('/delete', controller.delete_all);
+router.delete('/delete/:id', controller.delete_one);
 
 module.exports = router;

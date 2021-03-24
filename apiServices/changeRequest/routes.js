@@ -12,8 +12,8 @@ router.post('/create', [
     mailer.sendEmailChangeToOriginal, 
     mailer.sendEmailChangeToNew
 ]);
-router.put('/confirm/:id', controller.confirm);
-router.put('/cancel/:id', controller.cancel);
+router.put('/confirm/:id', [controller.confirm, mailer.sendConfirmationChange]);
+router.put('/cancel/:id', [controller.cancel, mailer.sendCancelationChange]);
 router.delete('/delete/:id', controller.delete_one);
 router.delete('/delete', controller.delete_all);
 

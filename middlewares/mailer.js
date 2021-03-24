@@ -18,8 +18,9 @@ function confirmationOriginalEmailChange(id, newEmail) {
         <p>
             Se ha seleccionado a ${newEmail} como nueva dirección para su cuenta en Locus de Control
             <br/>
-            Si ha sido usted no hace falta realizar otra acción. De lo contrario siga el siguiente enlace para cancelar este cambio.
-            También es necesario que cambie su contraseña para mayor seguridad.
+            Para confirmar y hacer efectivo este cambio debe seguir el enlace enviado a su nueva dirección de correo electrónico.
+            <br/>
+            Para cancelar este cambio siga el enlace adjunto. Además es recomendable que cambie su contraseña para mayor seguridad.
         </p>
         <br/>
         <a href="${hostFront + 'cancel-change/' + id}">REVERTIR CAMBIO</a>
@@ -48,6 +49,30 @@ function confirmationSuccessfull(username, email) {
             <li>Su enlace del test: ${hostFront}/test/start/${username}</li>
         </ul>
         <p>Ahora ya puede iniciar sesión con su correo electrónico y contraseña</p>
+        <br/>
+        <a href="${hostFront + 'login'}">INICIAR SESIÓN</a>
+    `
+}
+
+function confirmationChange(email) {
+    return `
+        <h3>Se ha confirmado el cambio de correo electrónico en su cuenta</h3>
+        <ul>
+            <li>Su nueva dirección es: ${email}</li>
+        </ul>
+        <p>Ahora ya puede iniciar sesión con su nuevo correo electrónico</p>
+        <br/>
+        <a href="${hostFront + 'login'}">INICIAR SESIÓN</a>
+    `
+}
+
+function cancelationChange(email) {
+    return `
+        <h3>Se ha cancelado el cambio de correo electrónico en su cuenta</h3>
+        <ul>
+            <li>Su dirección es: ${email}</li>
+        </ul>
+        <p>Ahora ya puede iniciar sesión con su original correo electrónico</p>
         <br/>
         <a href="${hostFront + 'login'}">INICIAR SESIÓN</a>
     `
@@ -119,11 +144,47 @@ let sendEmailConfirmated = function (req, res) {
         })
 }
 
+let sendConfirmationChange = function (req, res) {
+    let mailOptions = {
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
+        to: res.locals.email,
+        subject: 'Conformación de cambio de correo electrónico',
+        html: confirmationChange(res.locals.email)
+    };
+    mailer.transporter.sendMail(mailOptions)
+        .then(response => {
+            return res.status(200).send({ message: 'Se ha enviado un mail para confirmar su cambio de correo electrónico' });
+        })
+        .catch(err => {
+            console.log(console.error(err));
+            return res.status(500).send({ message: 'Se ha producido un error al enviar el email' });
+        })
+}
+
+let sendCancelationChange = function (req, res) {
+    let mailOptions = {
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
+        to: res.locals.email,
+        subject: 'Cancelación de cambio de correo electrónico',
+        html: cancelationChange(res.locals.email)
+    };
+    mailer.transporter.sendMail(mailOptions)
+        .then(response => {
+            return res.status(200).send({ message: 'Se ha enviado un mail para cancelar su cambio de correo electrónico' });
+        })
+        .catch(err => {
+            console.log(console.error(err));
+            return res.status(500).send({ message: 'Se ha producido un error al enviar el email' });
+        })
+}
+
 const mailerFunctions = {
     sendConfirmation,
     sendEmailChangeToOriginal,
     sendEmailChangeToNew,
-    sendEmailConfirmated
+    sendEmailConfirmated,
+    sendConfirmationChange,
+    sendCancelationChange
 };
 
 module.exports = mailerFunctions

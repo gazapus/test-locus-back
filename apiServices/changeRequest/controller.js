@@ -26,7 +26,7 @@ exports.create = async function (req, res, next) {
     }
 }
 
-exports.confirm = async function (req, res) {
+exports.confirm = async function (req, res, next) {
     const id = req.params.id;
     try {
         let changeRequest = await ChangeRequest.findById(id);
@@ -34,14 +34,15 @@ exports.confirm = async function (req, res) {
         if (changeRequest.canceled || changeRequest.confirmed)
             return res.status(400).send({ message: 'Este cambio ya ha expirado' })
         changeRequest.confirmed = true;
+        res.locals.email = changeRequest.newEmail;
         await changeRequest.save();
-        return res.status(200).send({ message: 'Confirmación exitosa' })
+        next();
     } catch(err) {
         res.status(500).send({ message: err.message || 'Se produjo un error al realizar esta confirmación'})
     }
 }
 
-exports.cancel = async function (req, res) {
+exports.cancel = async function (req, res, next) {
     const id = req.params.id;
     try {
         let changeRequest = await ChangeRequest.findById(id);
@@ -50,7 +51,8 @@ exports.cancel = async function (req, res) {
             return res.status(400).send({ message: 'Este cambio ya ha expirado' })
         changeRequest.canceled = true;
         await changeRequest.save();
-        return res.status(200).send({ message: 'Cancelación exitosa' })
+        res.locals.email = changeRequest.originalEmail;
+        next();
     } catch(err) {
         res.status(500).send({ message: err.message || 'Se produjo un error al realizar esta cancelación'})
     }
