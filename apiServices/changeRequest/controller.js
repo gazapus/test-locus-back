@@ -30,6 +30,7 @@ exports.confirm = async function (req, res) {
     const id = req.params.id;
     try {
         let changeRequest = await ChangeRequest.findById(id);
+        if(!changeRequest)  return res.status(404).send({ message: 'Cambio de email no encontrado' })
         if (changeRequest.canceled || changeRequest.confirmed)
             return res.status(400).send({ message: 'Este cambio ya ha expirado' })
         changeRequest.confirmed = true;
@@ -44,6 +45,7 @@ exports.cancel = async function (req, res) {
     const id = req.params.id;
     try {
         let changeRequest = await ChangeRequest.findById(id);
+        if(!changeRequest)  return res.status(404).send({ message: 'Cambio de email no encontrado' })
         if (changeRequest.canceled)
             return res.status(400).send({ message: 'Este cambio ya ha expirado' })
         changeRequest.canceled = true;
