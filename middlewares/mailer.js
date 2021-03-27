@@ -78,6 +78,33 @@ function cancelationChange(email) {
     `
 }
 
+function restartPassword(idRequest) {
+    return `
+    <h3>Se ha solicitado cambio de password en su cuenta</h3>
+    <p>Para reestablecer el password siga el siguiente enlace</p>
+    <a href="${hostFront + 'restart-password/' + idRequest}">REESTABLECER</a>
+    <br/>
+    <p>Si usted no ha solicitado el cambio no hace falta ninguna acción</p>
+`
+}
+
+let sendRestartPassword = function (req, res, next) {
+    let mailOptions = {
+        from: `"Locus de Control" <${mailerConfig.remitent}>`,
+        to: res.locals.email,
+        subject: 'Reestablecimiento de contraseña',
+        html: restartPassword(res.locals.idRequest)
+    };
+    mailer.transporter.sendMail(mailOptions)
+        .then(response => {
+            console.log('Se ha enviado un mail para reestablecer la contraseña');
+            return res.status(200).send({ message: 'Se ha enviado un email para reestablecer la contraseña' });
+        })
+        .catch(err => {
+            return res.status(500).send({ message: err.message || 'Se ha producido un error al enviar el email' });
+        })
+}
+
 let sendConfirmation = function (req, res) {
     let mailOptions = {
         from: `"Locus de Control" <${mailerConfig.remitent}>`,
@@ -184,7 +211,8 @@ const mailerFunctions = {
     sendEmailChangeToNew,
     sendEmailConfirmated,
     sendConfirmationChange,
-    sendCancelationChange
+    sendCancelationChange,
+    sendRestartPassword
 };
 
 module.exports = mailerFunctions
