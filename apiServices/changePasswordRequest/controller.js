@@ -8,18 +8,20 @@ exports.get_all = async function (req, res) {
 }
 
 exports.create = async function (req, res, next) {
+    
     try {
+        const user = await User.findOne({email: req.body.email});
+        if(!user) return res.status(404).send({message: 'Usuario no encontrado'});
         let changeRequest = new ChangePasswordRequest({
-            user: req.body.userId, 
+            user: user.id, 
             newPassword: req.body.newPassword
         });
         await changeRequest.save();
-        const user = await User.findById(req.body.userId);
-        res.locals.email =user.email;
+        res.locals.email = user.email;
         res.locals.idRequest = changeRequest.id;
         next();
     } catch (err) {
-        return res.status(400).send({ message: err.message || 'Hubo un error con esta solicitud' })
+        return res.status(400).send({ message: 'Hubo un error con esta solicitud' })
     }
 }
 
@@ -31,7 +33,7 @@ exports.confirm = async function (req, res) {
         await change.updateOne({ $set: {confirmed: true}});
         return res.status(200).send({message: 'Cambio realizado correctamente'})
     } catch (err) {
-        return res.status(400).send({ message: err.message || 'Hubo un error con esta solicitud' })
+        return res.status(400).send({ message: 'Hubo un error con esta solicitud' })
     }
 }
 

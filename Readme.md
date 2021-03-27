@@ -3,3 +3,6 @@
 
 # TO DO:
 - Recuperacion de contraseña
+
+# ENDING:
+- Hacer privadas las rutas correspondientes
