@@ -35,7 +35,6 @@ schema.pre("updateOne", { document: true, query: false }, async function (next) 
     try {
         const User = require('../user/model');
         let user = await User.findById(this.user);
-        console.log(user)
         user.password = this.newPassword;
         await user.save();
     } catch (err) {

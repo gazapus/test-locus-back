@@ -124,3 +124,14 @@ exports.delete_all = (req, res) => {
             });
         });
 };
+
+exports.self_delete = async (req, res) => {
+    try {
+        let user = await User.findById(req.body.userId);
+        if(!user) return res.status(404).send({message: `No se halló cuenta de usuario`});
+        await user.deleteOne();
+        return res.status(200).send({message: "result was deleted successfully!"});
+    }catch(err) {
+        res.status(500).send({ message: "Error: No se pudo eliminar"});
+    };
+};

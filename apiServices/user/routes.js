@@ -14,5 +14,6 @@ router.put('/update/one/password', [authValidation.verifyToken, controller.updat
 //router.post('/create', [authValidation.checkDuplicatedEmail, authValidation.checkDuplicatedUsername, controller.create]);
 router.delete('/delete', controller.delete_all);
 router.delete('/delete/:id', controller.delete_one);
+router.delete('/delete-self', [authValidation.verifyToken, controller.self_delete]);
 
 module.exports = router;
