@@ -4,3 +4,4 @@
 # TODOS:
 - Hacer privadas las rutas correspondientes
 - Estandarizar nombres
+- Documentar
