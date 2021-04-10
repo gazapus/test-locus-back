@@ -2,8 +2,12 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let schema = new Schema({
-    username: String,
-    email: String,
+    username: {
+        type: String, lowercase: true, trim: true
+    },
+    email: {
+        type: String, lowercase: true, trim: true
+    },
     password: String,
     tests: [{type: Schema.ObjectId, ref: 'Test'}],
     confirmed: { type: Boolean, default: false },
