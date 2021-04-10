@@ -35,15 +35,21 @@ let verifyToken = (req, res, next) => {
 };
 
 let verifyAdmin = (req, res, next) => {
-    User.findById(req.body.userId)
-        .then(user => {
-            if(user.role !== "ADMIN") return res.status(401).send({ message: "No tiene permiso de administrador" });
-            next();
-        })
-        .catch(err => {
-            return res.status(500).send({ message: err.message || "Se produjo un error en el servidor" });
-        })
-    }
+    let token = req.headers["x-access-token"];
+    if (!token) return res.status(403).send({ message: "No authentification token provided!" });
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err) return res.status(401).send({ message: "Unauthorized!" });
+        const userId = decoded.id;
+        User.findById(userId)
+            .then(user => {
+                if(user.role !== "ADMIN") return res.status(401).send({ message: "No tiene permiso de administrador" });
+                next();
+            })
+            .catch(err => {
+                return res.status(500).send({ message: err.message || "Se produjo un error en el servidor" });
+            })
+    })
+}
 
 const authValidation = {
     checkDuplicatedEmail,
