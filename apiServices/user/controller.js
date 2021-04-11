@@ -58,7 +58,7 @@ exports.create = function (req, res) {
 
 exports.update_email = async function (req, res) {
     try {
-        const id = req.body.userId;
+        const id = res.locals.userId;
         let user = await User.findOne({ email: req.body.email });
         if (user && user.id !== ud) return res.status(400).send({ message: "The email is used" })
         let userUpdated = await User.findByIdAndUpdate(id, { email: req.body.email });
@@ -75,7 +75,7 @@ exports.update_email = async function (req, res) {
 
 exports.update_username = async function (req, res) {
     try {
-        const id = req.body.userId;
+        const id = res.locals.userId;
         let user = await User.findOne({ username: req.body.username });
         if (user && user.id !== id) return res.status(400).send({ message: "The username is used" })
         let userUpdated = await User.findByIdAndUpdate(id, { username: req.body.username });
@@ -88,7 +88,7 @@ exports.update_username = async function (req, res) {
 
 exports.update_password = async function (req, res) {
     try {
-        const id = req.body.userId;
+        const id = res.locals.userId;
         const hashPassword = await bcrypt.hash(req.body.password, 10);
         let userUpdated = await User.findByIdAndUpdate(id, { password: hashPassword});
         if (userUpdated) return res.send(userUpdated);
@@ -127,7 +127,7 @@ exports.delete_all = (req, res) => {
 
 exports.self_delete = async (req, res) => {
     try {
-        let user = await User.findById(req.body.userId);
+        let user = await User.findById(res.locals.userId);
         if(!user) return res.status(404).send({message: `No se halló cuenta de usuario`});
         await user.deleteOne();
         return res.status(200).send({message: "result was deleted successfully!"});

@@ -29,7 +29,7 @@ let verifyToken = (req, res, next) => {
     if (!token) return res.status(403).send({ message: "No authentification token provided!" });
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) return res.status(401).send({ message: "Unauthorized!" });
-        req.body.userId = decoded.id;
+        res.locals.userId = decoded.id;
         next();
     });
 };

@@ -29,7 +29,7 @@ exports.get_one = function (req, res) {
 };
 
 exports.get_by_user = async function(req, res) {
-    User.findOne({ _id: req.body.userId}).populate('tests').exec(
+    User.findOne({ _id: res.locals.userId}).populate('tests').exec(
         function(err, user) {
             if(err) return res.status(400).send({message: err.message || 'Falló la busqueda de usuario'});
             return res.status(200).send(user.tests);
@@ -74,7 +74,7 @@ exports.delete_one = async (req, res) => {
     try {
         let test = await Test.findById(id);
         if(!test) return res.status(404).send({message: `Cannot found result with id=${id}`});
-        if(test.owner != req.body.userId) return res.status(503).send({message: `Usuario no autorizado`});
+        if(test.owner != res.locals.userId) return res.status(503).send({message: `Usuario no autorizado`});
         await test.deleteOne();
         return res.send({message: "result was deleted successfully!"});;
     }catch(err) {

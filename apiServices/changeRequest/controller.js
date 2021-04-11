@@ -9,9 +9,9 @@ exports.get_all = async function (req, res) {
 
 exports.create = async function (req, res, next) {
     try {
-        let user = await User.findById(req.body.userId);
+        let user = await User.findById(res.locals.userId);
         let changeRequest = new ChangeRequest({
-            user: req.body.userId,
+            user: res.locals.userId,
             originalEmail: user.email,
             newEmail: req.body.email
         })
